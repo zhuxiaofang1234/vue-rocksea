@@ -4,8 +4,7 @@ const resolve = function(dir) {
 };
 
 module.exports = {
-  publicPath:
-    process.env.NODE_ENV === "production" ? "/vue-admin-webapp/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/vue-rocksea/" : "/",
   outputDir: "dist",
   assetsDir: "static",
   lintOnSave: true, // 是否开启eslint保存检测
@@ -18,22 +17,12 @@ module.exports = {
   },
   devServer: {
     host: "localhost",
-    port: "8080",
+    port: "8084",
     hot: true,
     open: true,
     overlay: {
       warning: false,
       error: true
-    },
-    proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        target: process.env.VUE_APP_BASE_API,
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          ["^" + process.env.VUE_APP_BASE_API]: ""
-        }
-      }
     }
   }
 };
