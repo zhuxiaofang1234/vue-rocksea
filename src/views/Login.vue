@@ -7,9 +7,8 @@
         <div class="input_outer">
           <span class="u_user"></span>
           <input
-            name="username"
+            v-model="username"
             class="text-none"
-            id="username"
             autocomplete="off"
             placeholder="请输入账户"
             required="required"
@@ -20,23 +19,37 @@
         <div class="input_outer">
           <span class="us_uer"></span>
           <input
-            name="password"
+            v-model="password"
             class="text-none"
-            id="password"
             placeholder="请输入密码"
             required="required"
             type="password"
             value
           />
         </div>
-        <input value="登录" style="width:100%;" type="button" id="subBtn" />
+        <input value="登录" style="width:100%;" type="button" @click="login"/>
         <hr class="hr20" />
         <div class="loginInfo"></div>
       </form>
     </div>
   </div>
 </template>
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      password: "",
+      username: ""
+    };
+  },
+  methods: {
+    login() {
+      console.log(this.password);
+      console.log(this.username);
+    }
+  }
+}
+</script>
 <style scoped lang="scss">
 .login {
   height: 100%;
