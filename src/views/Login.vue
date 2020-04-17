@@ -3,34 +3,27 @@
     <div class="loginbox">
       <div class="message">武汉嘉测科技</div>
       <div id="darkbannerwrap"></div>
-      <form action>
-        <div class="input_outer">
-          <span class="u_user"></span>
-          <input
-            v-model="username"
-            class="text-none"
-            autocomplete="off"
-            placeholder="请输入账户"
-            required="required"
-            type="text"
-            value
-          />
-        </div>
-        <div class="input_outer">
-          <span class="us_uer"></span>
-          <input
-            v-model="password"
-            class="text-none"
-            placeholder="请输入密码"
-            required="required"
-            type="password"
-            value
-          />
-        </div>
-        <input value="登录" style="width:100%;" type="button" @click="login"/>
-        <hr class="hr20" />
-        <div class="loginInfo"></div>
-      </form>
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="80px"
+        class="demo-ruleForm"
+        hide-required-asterisk="true"
+      >
+        <el-form-item label="用户账号" prop="name">
+          <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="登录密码" prop="password">
+          <el-input v-model="ruleForm.password" show-password></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')"
+            >登陆</el-button
+          >
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -38,17 +31,53 @@
 export default {
   data() {
     return {
-      password: "",
-      username: ""
+      ruleForm: {
+        name: "",
+        password: ""
+      },
+      rules: {
+        name: [
+          {
+            required: true,
+            message: "请输入用戶账号",
+            trigger: "blur"
+          },
+          {
+            min: 3,
+            max: 5,
+            message: "长度在 3 到 5 个字符",
+            trigger: "blur"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: "请输入用户密码",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   methods: {
-    login() {
-      console.log(this.password);
-      console.log(this.username);
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    toast() {
+      this.$toast("你好")
     }
   }
-}
+};
 </script>
 <style scoped lang="scss">
 .login {
