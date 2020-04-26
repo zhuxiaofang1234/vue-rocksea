@@ -9,7 +9,6 @@
         ref="ruleForm"
         label-width="80px"
         class="demo-ruleForm"
-        hide-required-asterisk="true"
       >
         <el-form-item label="用户账号" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
@@ -18,9 +17,7 @@
           <el-input v-model="ruleForm.password" show-password></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >登陆</el-button
-          >
+          <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -41,12 +38,6 @@ export default {
             required: true,
             message: "请输入用戶账号",
             trigger: "blur"
-          },
-          {
-            min: 3,
-            max: 5,
-            message: "长度在 3 到 5 个字符",
-            trigger: "blur"
           }
         ],
         password: [
@@ -63,7 +54,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          console.log(this.ruleForm.name);
+          console.log(this.ruleForm.password);
         } else {
           console.log("error submit!!");
           return false;
@@ -73,8 +65,8 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    toast() {
-      this.$toast("你好")
+    postLogin(data) {
+      console.log(data);
     }
   }
 };
