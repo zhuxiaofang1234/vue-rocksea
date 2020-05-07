@@ -10,8 +10,8 @@
         label-width="80px"
         class="demo-ruleForm"
       >
-        <el-form-item label="用户账号" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="用户账号" prop="userNameOrEmailAddress">
+          <el-input v-model="ruleForm.userNameOrEmailAddress"></el-input>
         </el-form-item>
         <el-form-item label="登录密码" prop="password">
           <el-input v-model="ruleForm.password" show-password></el-input>
@@ -29,47 +29,67 @@ export default {
   data() {
     return {
       ruleForm: {
-        name: "",
-        password: ""
+        userNameOrEmailAddress: '',
+        password: ''
       },
       rules: {
-        name: [
+        userNameOrEmailAddress: [
           {
             required: true,
-            message: "请输入用戶账号",
-            trigger: "blur"
+            message: '请输入用戶账号',
+            trigger: 'blur'
           }
         ],
         password: [
           {
             required: true,
-            message: "请输入用户密码",
-            trigger: "blur"
+            message: '请输入用户密码',
+            trigger: 'blur'
           }
         ]
       }
-    };
+    }
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          console.log(this.ruleForm.name);
-          console.log(this.ruleForm.password);
+          console.log(this.ruleForm.userNameOrEmailAddress)
+          console.log(this.ruleForm.password)
+          this.$http.post('api/TokenAuth/Authenticate', this.ruleForm).then(
+            response => {
+              this.$message({
+                message: '登录成功',
+                type: 'success'
+              })
+              //存储token
+              let accessToken = response.data.result.accessToken
+              window.sessionStorage.setItem('accessToken', accessToken)
+              //跳转到后台主页
+              this.$router.push('/home')
+            },
+            err => {
+              this.$message({
+                showClose: true,
+                message: '用户名或密码错误',
+                type: 'warning'
+              })
+            }
+          )
         } else {
-          console.log("error submit!!");
-          return false;
+          this.$message.error('登录失败')
+          return false
         }
-      });
+      })
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields()
     },
     postLogin(data) {
-      console.log(data);
+      console.log(data)
     }
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .login {
@@ -116,7 +136,7 @@ export default {
   height: 46px;
   outline: none;
   display: inline-block;
-  font: 14px "microsoft yahei", Helvetica, Tahoma, Arial, "Microsoft jhengHei";
+  font: 14px 'microsoft yahei', Helvetica, Tahoma, Arial, 'Microsoft jhengHei';
   margin-left: 50px;
   border: none;
   background: none;
@@ -142,8 +162,8 @@ input.text-none:focus .input_outer {
   position: absolute;
   margin: 10px 13px;
 }
-input[type="submit"],
-input[type="button"] {
+input[type='submit'],
+input[type='button'] {
   display: inline-block;
   vertical-align: middle;
   padding: 12px 24px;
