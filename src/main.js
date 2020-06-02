@@ -10,7 +10,8 @@ import axios from "axios";
 Vue.prototype.$http = axios;
 
 //配置请求的根路径
-axios.defaults.baseURL = "/api";
+// axios.defaults.baseURL = "";
+axios.defaults.baseURL = process.env.VUE_APP_URL;
 
 Vue.config.productionTip = false;
 

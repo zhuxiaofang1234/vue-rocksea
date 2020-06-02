@@ -56,8 +56,9 @@ export default {
         if (valid) {
           console.log(this.ruleForm.userNameOrEmailAddress)
           console.log(this.ruleForm.password)
-          this.$http.post('api/TokenAuth/Authenticate', this.ruleForm).then(
+          this.$http.post('data.json', this.ruleForm).then(
             response => {
+              debugger
               this.$message({
                 message: '登录成功',
                 type: 'success'
@@ -69,6 +70,8 @@ export default {
               this.$router.push('/home')
             },
             err => {
+              console.log(err)
+              debugger
               this.$message({
                 showClose: true,
                 message: '用户名或密码错误',
