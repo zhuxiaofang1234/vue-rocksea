@@ -4,7 +4,7 @@
             <div class="imageArea"></div>
             <!--顶部菜单-->
             <el-menu
-                    default-active="UnitManagement"
+                    :default-active="topActiveIndex"
                     class="el-menu-first"
                     mode="horizontal"
                     @select="handleSelect"
@@ -12,7 +12,7 @@
                     text-color="#fff"
                     active-text-color="#ffd04b"
             >
-                <el-menu-item index="1" v-for="item in menuData" :index="item.name">{{item.displayName}}</el-menu-item>
+                <el-menu-item  v-for="item in menuData" :index="item.name">{{item.displayName}}</el-menu-item>
             </el-menu>
         </el-header>
         <el-container>
@@ -49,28 +49,27 @@
 </template>
 
 <script>
-  // @ is an alias to /src
+
   export default {
     name: "Home",
     data() {
       return {
-        topActiveIndex:"5", //默认选中顶部菜单的index
-        activeIndex: "1-1-1", //默认选中侧边栏菜单index
-        activeIndex2: "1",
-        indexArray:["1","1-1"],
+        topActiveIndex:"UnitManagement", //默认选中顶部菜单的index
+        activeIndex: "SelfUnit", //默认选中侧边栏菜单一级index
+        indexArray:[], //默认展开的菜单
         menuData:[],
         currentMenuData:[]
       };
     },
     created(){
-    this.getGetCurrentLoginInformations()
+    this.getGetCurrentLoginInformations();
     },
     methods: {
-      handleSelect(key, keyPath) {//选择顶部菜单，渲染二级菜单
-        console.log(key);
-       this.currentMenuData= this.menuData.filter(function(item){
+      handleSelect(key, keyPath) { //选择顶部菜单，渲染二级菜单
+       this.currentMenuData = this.menuData.filter(function(item){
           return item.name === key
         });
+          this.openChildMenu ()
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
@@ -82,9 +81,34 @@
          const {data:res} =  await this.$http.get('/api/services/app/Session/GetCurrentLoginInformations');
          const  result = res.result;
            let menuData = result.menu.items;
+           this.menuData = menuData;
            console.log(menuData);
-           this.menuData = menuData
-      }
+
+           //默认渲染的二级菜单
+           var defalutCode = this.topActiveIndex; //默认的code
+              this.currentMenuData = menuData.filter(function(item){
+               return item.name === defalutCode
+           });
+              this.openChildMenu();
+
+
+      },
+        openChildMenu (){ //默认展开二级菜单
+            if(this.currentMenuData.length!==0){ //一级菜单
+                let code1 = this.currentMenuData[0].name;
+                this.indexArray.push(code1);
+                if(this.currentMenuData[0].items.length!==0){ //二级菜单
+                    let code2 =  this.currentMenuData[0].items[0].name;
+                    this.indexArray.push(code2);
+                    if(this.currentMenuData[0].items[0].items.length!==0){ //三级菜单
+                        let code3 =  this.currentMenuData[0].items[0].items[0].name;
+                        this.activeIndex = code3;
+                    }else{
+                        this.activeIndex = code2;
+                    }
+                }
+            }
+        }
     }
   };
 </script>
