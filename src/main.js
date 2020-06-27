@@ -4,8 +4,8 @@ import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import 'font-awesome/css/font-awesome.min.css'
 import "@/style/common.scss";
-import Toast from "@/components/toast/Toast.vue";
 import axios from "axios";
 Vue.prototype.$http = axios;
 
@@ -27,7 +27,6 @@ axios.interceptors.request.use(function(config){
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI);
-Vue.use(Toast);
 new Vue({
   router,
   store,
