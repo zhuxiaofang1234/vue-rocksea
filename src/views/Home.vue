@@ -1,9 +1,9 @@
 <template>
     <el-container>
         <el-header>
-            <div class="header-l" :width="isCollapse ? '64px' : '200px'"></div>
+            <div :class="[{samllWidth:isCollapse},'header-l']"></div>
             <!--顶部菜单-->
-            <div class="header-r">
+            <div :class="[isCollapse ? 'smallLeft' :'largeLeft' ,'header-r']">
                 <div class="menu-collapse" @click="toggleCollapse">
                     <i class="el-icon-s-fold"></i>
                 </div>
@@ -24,7 +24,7 @@
             </div>
         </el-header>
         <el-container>
-            <el-aside :width="isCollapse ? '64px' : '200px'">
+            <el-aside :style="{width:isCollapse ? '64px' : '200px'}">
                 <!--侧边栏菜单-->
                 <el-menu
                         :default-openeds ="indexArray"
@@ -76,7 +76,6 @@
         menuData:[], //菜单数据
         currentMenuData:[], //侧边菜单数据
         isCollapse: false,
-        sideMenuWidth:200
       };
     },
     created(){
@@ -103,8 +102,6 @@
          const  result = res.result;
            let menuData = result.menu.items;
            this.menuData = menuData;
-           console.log(menuData);
-
            //默认渲染的二级菜单
            var defalutCode = this.topActiveIndex; //默认的code
               this.currentMenuData = menuData.filter(function(item){
@@ -147,6 +144,7 @@
     height: 60px;
     }
     .header-l{
+        width:200px;
         height: 100%;
         float: left;
         background-color:#3a3f51;
@@ -157,11 +155,19 @@
         transition: width 0.3s;
         overflow: hidden;
     }
+    .header-l.samllWidth,.el-aside.samllWidth{
+        width:64px !important;
+    }
     .header-r{
-        margin-left:200px;
         height:100%;
         position: relative;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
+    }
+    .header-r.smallLeft{
+        margin-left:64px;
+    }
+    .header-r.largeLeft{
+        margin-left:200px;
     }
     .header-r .menu-collapse{
         position: absolute;
@@ -172,11 +178,13 @@
     }
 
     .el-aside {
+        width:200px;
         background-color: #3a3f51;
         color: #fff;
         height: 100%;
         text-align: left;
     }
+
 
     .el-container {
         height: 100%;
@@ -203,7 +211,7 @@
         background-color: #e9eef3;
         color: #333;
         text-align: center;
-        line-height: 160px;
+        overflow: hidden;
     }
 
     body > .el-container {
