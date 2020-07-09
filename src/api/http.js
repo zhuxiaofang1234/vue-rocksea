@@ -1,6 +1,6 @@
 import axios from "axios";
 import Qs from 'qs';
-
+import { Message } from 'element-ui'
 const $axios = axios.create({
   //设置超时时间
   timeout: 30000,
@@ -14,8 +14,8 @@ let loading = null;
 $axios.interceptors.request.use(function(config) {
   let token = window.sessionStorage.getItem("accessToken");
   if (token) {
-    //loading = Loading.service({ text: "拼命加载中" });
-    //将token放到请求头发送给服务器，将tokenkey放在请求头中
+    // loading = this.$loading.service({ text: "拼命加载中" });
+   // 将token放到请求头发送给服务器，将tokenkey放在请求头中
     config.headers.Authorization = "Bearer " + token;
   }
   return config;
@@ -26,9 +26,9 @@ $axios.interceptors.request.use(function(config) {
 //响应拦截器
 $axios.interceptors.response.use(
   response => {
-    if (loading) {
-     // loading.close();
-    }
+    // if (loading) {
+    //   ElementUI.$loading.close();
+    // }
     const code = response.status;
     if ((code >= 200 && code < 300) || code === 304) {
       return Promise.resolve(response.data);
@@ -37,9 +37,9 @@ $axios.interceptors.response.use(
     }
   },
   error => {
-    if (loading) {
-      //loading.close();
-    }
+    // if (loading) {
+    //   ElementUI.$loading.close();
+    // }
 
     if(error.response){
       switch(error.response.status){
@@ -55,17 +55,17 @@ $axios.interceptors.response.use(
           });
           break;
         case 404:
-          //this.$message.error('网络请求不存在');
+          Message.error('网络请求不存在');
           break;
         default:
-         // this.$message.error(error.response.data.message)
+          Message.error(error.response.data.message)
       }
     }else{
       // 请求超时或者网络有问题
       if (error.message.includes('timeout')) {
-       // this.$message.error('请求超时！请检查网络是否正常')
+        Message.error('请求超时！请检查网络是否正常')
       } else {
-        //this.$message.error('请求失败，请检查网络是否已连接')
+        Message.error('请求失败，请检查网络是否已连接')
       }
 
     }
