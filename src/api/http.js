@@ -8,9 +8,6 @@ const $axios = axios.create({
 });
 
 // 在全局请求和响应拦截器中添加请求状态
-Vue.prototype.$http = axios;
-
-// 在全局请求和响应拦截器中添加请求状态
 let loading = null;
 
 //请求拦截器
@@ -58,17 +55,17 @@ $axios.interceptors.response.use(
           });
           break;
         case 404:
-          Message.error('网络请求不存在');
+          this.$message.error('网络请求不存在');
           break;
         default:
-          Message.error(error.response.data.message)
+          this.$message.error(error.response.data.message)
       }
     }else{
       // 请求超时或者网络有问题
       if (error.message.includes('timeout')) {
-        Message.error('请求超时！请检查网络是否正常')
+        this.$message.error('请求超时！请检查网络是否正常')
       } else {
-        Message.error('请求失败，请检查网络是否已连接')
+        this.$message.error('请求失败，请检查网络是否已连接')
       }
 
     }
@@ -82,10 +79,7 @@ export default {
     return $axios({
       method:'post',
       url,
-      data:Qs.stringify(data),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }
+      data:data
     })
   },
   get(url,params){

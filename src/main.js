@@ -1,13 +1,14 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
+import Vue from "vue"
+import App from "./App.vue"
+import router from "./router"
+import store from "./store"
+import ElementUI from "element-ui"
+import "element-ui/lib/theme-chalk/index.css"
 import 'font-awesome/css/font-awesome.min.css'
-import "@/style/common.scss";
+import "@/style/common.scss"
+import http from "./api/http.js"
 
-// Vue.prototype.$http = axios;
+ Vue.prototype.$http = http;
 //
 // //配置请求的根路径
 // axios.defaults.baseURL = "";

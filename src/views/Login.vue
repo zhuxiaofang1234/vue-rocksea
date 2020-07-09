@@ -63,15 +63,15 @@ export default {
               this.$message({
                 message: '登录成功',
                 type: 'success'
-              })
+              });
               //存储token
-              let accessToken = response.data.result.accessToken
+              let accessToken = response.result.accessToken
               window.sessionStorage.setItem('accessToken', accessToken)
               //跳转到后台主页
               this.$router.push('/home')
             },
             err => {
-              console.log(err)
+              console.log(err);
               this.$message({
                 showClose: true,
                 message: '用户名或密码错误',
