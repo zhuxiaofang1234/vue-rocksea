@@ -14,7 +14,7 @@ let loading = null;
 $axios.interceptors.request.use(function(config) {
   let token = window.sessionStorage.getItem("accessToken");
   if (token) {
-    loading = Loading.service({ text: "拼命加载中" });
+    //loading = Loading.service({ text: "拼命加载中" });
     //将token放到请求头发送给服务器，将tokenkey放在请求头中
     config.headers.Authorization = "Bearer " + token;
   }
@@ -27,7 +27,7 @@ $axios.interceptors.request.use(function(config) {
 $axios.interceptors.response.use(
   response => {
     if (loading) {
-      loading.close();
+     // loading.close();
     }
     const code = response.status;
     if ((code >= 200 && code < 300) || code === 304) {
@@ -38,7 +38,7 @@ $axios.interceptors.response.use(
   },
   error => {
     if (loading) {
-      loading.close();
+      //loading.close();
     }
 
     if(error.response){
@@ -55,17 +55,17 @@ $axios.interceptors.response.use(
           });
           break;
         case 404:
-          this.$message.error('网络请求不存在');
+          //this.$message.error('网络请求不存在');
           break;
         default:
-          this.$message.error(error.response.data.message)
+         // this.$message.error(error.response.data.message)
       }
     }else{
       // 请求超时或者网络有问题
       if (error.message.includes('timeout')) {
-        this.$message.error('请求超时！请检查网络是否正常')
+       // this.$message.error('请求超时！请检查网络是否正常')
       } else {
-        this.$message.error('请求失败，请检查网络是否已连接')
+        //this.$message.error('请求失败，请检查网络是否已连接')
       }
 
     }

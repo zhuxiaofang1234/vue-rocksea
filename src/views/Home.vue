@@ -98,8 +98,9 @@
         console.log(keyPath);
       },
        async getGetCurrentLoginInformations(){
-         const {data:res} =  await this.$http.get('/api/services/app/Session/GetCurrentLoginInformations');
+        var res = await this.$http.get('/api/services/app/Session/GetCurrentLoginInformations');
          const  result = res.result;
+
            let menuData = result.menu.items;
            this.menuData = menuData;
            //默认渲染的二级菜单
