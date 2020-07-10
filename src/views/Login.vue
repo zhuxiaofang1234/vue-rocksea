@@ -57,7 +57,7 @@ export default {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           console.log(this.ruleForm.userNameOrEmailAddress)
-          console.log(this.ruleForm.password)
+
           this.$http.post('/api/TokenAuth/Authenticate', this.ruleForm).then(
             response => {
               this.$message({

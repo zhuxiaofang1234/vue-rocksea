@@ -100,7 +100,6 @@
        async getGetCurrentLoginInformations(){
         var res = await this.$http.get('/api/services/app/Session/GetCurrentLoginInformations');
          const  result = res.result;
-
            let menuData = result.menu.items;
            this.menuData = menuData;
            //默认渲染的二级菜单
@@ -136,13 +135,11 @@
   };
 </script>
 <style scoped lang="scss">
-    .el-header {
-        padding: 0;
-    }
     .el-header
    {
     text-align: center;
     height: 60px;
+    padding: 0;
     }
     .header-l{
         width:200px;

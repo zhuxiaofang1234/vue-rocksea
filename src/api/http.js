@@ -1,6 +1,6 @@
 import axios from "axios";
 import Qs from 'qs';
-import { Message } from 'element-ui'
+import {Message, Loading } from 'element-ui'
 const $axios = axios.create({
   //设置超时时间
   timeout: 30000,
@@ -14,7 +14,7 @@ let loading = null;
 $axios.interceptors.request.use(function(config) {
   let token = window.sessionStorage.getItem("accessToken");
   if (token) {
-    // loading = this.$loading.service({ text: "拼命加载中" });
+    loading = Loading.service({ text: "拼命加载中" });
    // 将token放到请求头发送给服务器，将tokenkey放在请求头中
     config.headers.Authorization = "Bearer " + token;
   }
@@ -26,9 +26,9 @@ $axios.interceptors.request.use(function(config) {
 //响应拦截器
 $axios.interceptors.response.use(
   response => {
-    // if (loading) {
-    //   ElementUI.$loading.close();
-    // }
+    if (loading) {
+        loading.close();
+    }
     const code = response.status;
     if ((code >= 200 && code < 300) || code === 304) {
       return Promise.resolve(response.data);
@@ -37,9 +37,9 @@ $axios.interceptors.response.use(
     }
   },
   error => {
-    // if (loading) {
-    //   ElementUI.$loading.close();
-    // }
+    if (loading) {
+        loading.close();
+    }
 
     if(error.response){
       switch(error.response.status){
