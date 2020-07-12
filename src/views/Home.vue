@@ -70,8 +70,8 @@
     name: "Home",
     data() {
       return {
-        topActiveIndex:"UnitManagement", //默认选中顶部菜单的index
-        activeIndex: "SelfUnit", //默认选中侧边栏菜单一级index
+        topActiveIndex:"ProjectManagement", //默认选中顶部菜单的index
+        activeIndex: "ProjectCreation", //默认选中侧边栏菜单一级index
         indexArray:null, //默认展开的菜单
         menuData:[], //菜单数据
         currentMenuData:[], //侧边菜单数据
@@ -83,6 +83,7 @@
     },
     methods: {
       handleSelect(key, keyPath) { //选择顶部菜单，渲染二级菜单
+        console.log(key)
        this.currentMenuData = this.menuData.filter(function(item){
           return item.name === key
         });
@@ -208,7 +209,6 @@
     .el-main {
         background-color: #e9eef3;
         color: #333;
-        text-align: center;
         overflow: hidden;
     }
 
