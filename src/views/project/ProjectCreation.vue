@@ -3,21 +3,21 @@
         <div class="header">
             <el-card>
                 <el-form :inline="true" class="demo-form-inline">
-                    <el-radio-group>
-                        <el-radio :label="">全部</el-radio>
-                        <el-radio :label="6">自检工程</el-radio>
-                        <el-radio :label="9">委外工程</el-radio>
-                        <el-radio :label="10">未知工程</el-radio>
+                    <el-radio-group v-model="projectType" @change="getProjectType">
+                        <el-radio :label="10">全部</el-radio>
+                        <el-radio :label="2">自检工程</el-radio>
+                        <el-radio :label="1">委外工程</el-radio>
+                        <el-radio :label="0">未知工程</el-radio>
                     </el-radio-group>
                     <el-form-item>
-                        <el-select  placeholder="备案状态"  clearable >
+                        <el-select placeholder="备案状态" clearable v-model="FilingStatus" @change="getFilingStatus">
                             <el-option label="撤销" value="0"></el-option>
                             <el-option label="正常备案" value="1"></el-option>
                             <el-option label="提前介入" value="2"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-input placeholder="请输入工程编号\名称" ></el-input>
+                        <el-input placeholder="请输入工程编号\名称" v-model="Filter"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -35,8 +35,8 @@
                         style="width:100%">
                     <el-table-column
                             label="序号"
-                            type="index"
                             width="50"
+                           :formatter="formatNum"
                     >
                     </el-table-column>
                     <el-table-column
@@ -89,7 +89,8 @@
                             width="100"
                     >
                         <template slot-scope="scope">
-                            <el-tag :type="scope.row.acceptStatus | tagClass">{{scope.row.acceptStatus | statusText}}</el-tag>
+                            <el-tag :type="scope.row.acceptStatus | tagClass">{{scope.row.acceptStatus | statusText}}
+                            </el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -126,106 +127,129 @@
             </el-card>
         </div>
     </div>
-    </template>
+</template>
 <script>
-  export default {
-    name: "ProjectCreation",
-    data() {
-      return {
-        totalNum: 0,
-        pageSize:10,
-        currentPage: 1, //当前页码
-        tableData: []
-      };
-    },
-    created(){
-        this.getProjectList()
-    },
-    filters: {
-      statusText(val) {
-        if (val === undefined) return;
-        if (val == 0) {
-          return '待受理'
-        } else if (val == 1) {
-          return '受理通过'
-        }else if(val==2){
-          return '受理驳回'
-        }
-      },
-      tagClass(val) {
-        if (val === undefined) return;
-        if (val == 0) {
-          return 'primary'
-        } else if (val == 1) {
-          return 'success'
-        } else if(val==2){
-          return 'danger'
-        }
-      },
-      // 状态显示转换
-      filingStatusText(status) {
-        const statusMap = {
-          0: '撤销',
-          1: '正常备案',
-          2: '提前介入'
-        };
-        return statusMap[status]
-      }
-    },
-    methods:{
-        formatTime(row){
-            return row.acceptTime.substring(0, 10);
+    export default {
+        name: "ProjectCreation",
+        data() {
+            return {
+                projectType:10,
+                FilingStatus:'',
+                Filter:'',
+                totalNum: 0,
+                pageSize: 10,
+                currentPage: 1, //当前页码
+                tableData: [],
+            };
         },
-      getProjectList(){
-        let url = '/api/services/app/ProjectCreation/GetPaged';
-        let params ={
-            MaxResultCount:this.pageSize,
-            SkipCount:(this.currentPage -1)*this.pageSize
-        };
-        this.$http.get(url,params).then(res=>{
-         let projectListData = res.result.items;
-          this.totalNum = res.result.totalCount;
-          this.tableData = projectListData;
-        },err=>{
+        created() {
+            this.getProjectList()
+        },
+        filters: {
+            statusText(val) {
+                if (val === undefined) return;
+                if (val == 0) {
+                    return '待受理'
+                } else if (val == 1) {
+                    return '受理通过'
+                } else if (val == 2) {
+                    return '受理驳回'
+                }
+            },
+            tagClass(val) {
+                if (val === undefined) return;
+                if (val == 0) {
+                    return 'primary'
+                } else if (val == 1) {
+                    return 'success'
+                } else if (val == 2) {
+                    return 'danger'
+                }
+            },
+            // 状态显示转换
+            filingStatusText(status) {
+                const statusMap = {
+                    0: '撤销',
+                    1: '正常备案',
+                    2: '提前介入'
+                };
+                return statusMap[status]
+            }
+        },
+        methods: {
+            formatNum(row, column, cellValue, index){
+                return this.pageSize * (this.currentPage - 1)+ index + 1;//返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+            },
+            formatTime(row) {
+                return row.acceptTime.substring(0, 10);
+            },
+            getProjectList() {
+                let url = '/api/services/app/ProjectCreation/GetPaged';
+                let testType = this.projectType ===10 ? '':this.projectType;
+                let params = {
+                    TestType:testType,
+                    FilingStatus:this.FilingStatus,
+                    Filter:this.Filter.trim(),
+                    MaxResultCount: this.pageSize,
+                    SkipCount: (this.currentPage - 1) * this.pageSize
+                };
+                this.$http.get(url, params).then(res => {
+                    let projectListData = res.result.items;
+                    this.totalNum = res.result.totalCount;
+                    this.tableData = projectListData;
+                }, err => {
 
-        })
-      },
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-      },
-      onSubmit(){
-        console.log('submit!')
-      },
-      handleSizeChange(val){
-          this.pageSize = val;
-          this.getProjectList();
-      },
-      handleCurrentChange(val) {
-            this.currentPage = val;
-           this.getProjectList();
-      }
-    }
-  };
+                })
+            },
+            deleteRow(index, rows) {
+                rows.splice(index, 1);
+            },
+            onSubmit() {
+                this.getProjectList();
+            },
+            handleSizeChange(val) {
+                this.pageSize = val;
+                this.getProjectList();
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.getProjectList();
+            },
+            getProjectType(val) {
+                this.projectType = val;
+                this.getProjectList();
+            },
+            getFilingStatus(val) {
+                this.FilingStatus = val;
+                this.getProjectList();
+            }
+        }
+    };
 </script>
 
 <style scoped lang="scss">
-    .header{
-        margin-bottom:10px;
+    .header {
+        margin-bottom: 10px;
     }
-    .el-card{
-        height:100%;
+
+    .el-card {
+        height: 100%;
         overflow: hidden;
     }
-    .el-form.demo-form-inline{
-        text-align:left;
+
+    .el-form.demo-form-inline {
+        text-align: left;
     }
-    .el-form-item{
+
+    .el-form-item {
         margin-bottom: 0;
     }
-    .el-radio-group{
+
+    .el-radio-group {
         margin-right: 30px;
         margin-top: 14px;
     }
+
     .el-pagination {
         white-space: nowrap;
         padding: 2px 5px;
@@ -234,7 +258,8 @@
         float: right;
         margin: 20px 0;
     }
-    .el-pagination__total{
+
+    .el-pagination__total {
         vertical-align: middle;
     }
 </style>
