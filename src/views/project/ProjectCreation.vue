@@ -1,36 +1,32 @@
 <template>
     <div class="container">
-        <div class="header">
+        <div class="main">
             <el-card>
                 <el-form :inline="true" class="demo-form-inline">
-                    <el-radio-group v-model="projectType" @change="getProjectType">
+                    <el-radio-group v-model="queryInfo.projectType" @change="getProjectType">
                         <el-radio :label="10">全部</el-radio>
                         <el-radio :label="2">自检工程</el-radio>
                         <el-radio :label="1">委外工程</el-radio>
                         <el-radio :label="0">未知工程</el-radio>
                     </el-radio-group>
                     <el-form-item>
-                        <el-select placeholder="备案状态" clearable v-model="FilingStatus" @change="getFilingStatus">
+                        <el-select placeholder="备案状态" clearable v-model="queryInfo.FilingStatus" @change="getFilingStatus">
                             <el-option label="撤销" value="0"></el-option>
                             <el-option label="正常备案" value="1"></el-option>
                             <el-option label="提前介入" value="2"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-input placeholder="请输入工程编号\名称" v-model="Filter"></el-input>
+                        <el-input placeholder="请输入工程编号\名称" v-model="queryInfo.Filter"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">查询</el-button>
                         <el-button type="success" icon="el-icon-circle-plus-outline">添加</el-button>
                     </el-form-item>
                 </el-form>
-            </el-card>
-        </div>
-        <div class="main">
-            <el-card>
                 <el-table
                         :data="tableData"
-                        height="680"
+                        height="780"
                         border
                         style="width:100%">
                     <el-table-column
@@ -59,13 +55,11 @@
                     <el-table-column
                             prop="projectAddress"
                             label="工程地址"
-                            width="300"
                     >
                     </el-table-column>
                     <el-table-column
                             prop="proWTComName"
                             label="委托单位"
-                            width="300"
                     >
                     </el-table-column>
                     <el-table-column
@@ -117,9 +111,9 @@
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage"
+                        :current-page.sync="queryInfo.currentPage"
                         :page-sizes="[10, 20, 30, 40]"
-                        :page-size="pageSize"
+                        :page-size="queryInfo.pageSize"
                         background
                         layout="total,sizes, prev, pager, next"
                         :total="totalNum">
@@ -133,12 +127,14 @@
         name: "ProjectCreation",
         data() {
             return {
-                projectType:10,
-                FilingStatus:'',
-                Filter:'',
-                totalNum: 0,
-                pageSize: 10,
-                currentPage: 1, //当前页码
+                queryInfo:{
+                  projectType:10,
+                  FilingStatus:'',
+                  Filter:'',
+                  pageSize: 10,
+                  currentPage: 1, //当前页码
+                },
+                totalNum:0,
                 tableData: [],
             };
         },
@@ -178,20 +174,20 @@
         },
         methods: {
             formatNum(row, column, cellValue, index){
-                return this.pageSize * (this.currentPage - 1)+ index + 1;//返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
+                return this.queryInfo.pageSize * (this.queryInfo.currentPage - 1)+ index + 1;//返回每条的序号： 每页条数 * （当前页 - 1 ）+ 序号
             },
             formatTime(row) {
                 return row.acceptTime.substring(0, 10);
             },
             getProjectList() {
                 let url = '/api/services/app/ProjectCreation/GetPaged';
-                let testType = this.projectType ===10 ? '':this.projectType;
+                let testType = this.queryInfo.projectType === 10 ? '':this.queryInfo.projectType;
                 let params = {
                     TestType:testType,
-                    FilingStatus:this.FilingStatus,
-                    Filter:this.Filter.trim(),
-                    MaxResultCount: this.pageSize,
-                    SkipCount: (this.currentPage - 1) * this.pageSize
+                    FilingStatus:this.queryInfo.FilingStatus,
+                    Filter:this.queryInfo.Filter.trim(),
+                    MaxResultCount: this.queryInfo.pageSize,
+                    SkipCount: (this.queryInfo.currentPage - 1) * this.queryInfo.pageSize
                 };
                 this.$http.get(url, params).then(res => {
                     let projectListData = res.result.items;
@@ -208,19 +204,19 @@
                 this.getProjectList();
             },
             handleSizeChange(val) {
-                this.pageSize = val;
+                this.queryInfo.pageSize = val;
                 this.getProjectList();
             },
             handleCurrentChange(val) {
-                this.currentPage = val;
+                this.queryInfo.currentPage = val;
                 this.getProjectList();
             },
             getProjectType(val) {
-                this.projectType = val;
+                this.queryInfo.projectType = val;
                 this.getProjectList();
             },
             getFilingStatus(val) {
-                this.FilingStatus = val;
+                this.queryInfo.FilingStatus = val;
                 this.getProjectList();
             }
         }
@@ -239,6 +235,7 @@
 
     .el-form.demo-form-inline {
         text-align: left;
+        margin-bottom:25px;
     }
 
     .el-form-item {
