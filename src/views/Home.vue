@@ -83,7 +83,6 @@
     },
     methods: {
       handleSelect(key, keyPath) { //选择顶部菜单，渲染二级菜单
-        console.log(key)
        this.currentMenuData = this.menuData.filter(function(item){
           return item.name === key
         });
@@ -183,7 +182,6 @@
         height: 100%;
         text-align: left;
     }
-
 
     .el-container {
         height: 100%;
