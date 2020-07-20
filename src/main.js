@@ -8,7 +8,8 @@ import 'font-awesome/css/font-awesome.min.css'
 import "@/style/common.scss"
 import http from "./api/http.js"
 
- Vue.prototype.$http = http;
+ElementUI.Dialog.props.closeOnClickModal.default = false;
+Vue.prototype.$http = http;
 
 Vue.config.productionTip = false;
 
