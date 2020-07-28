@@ -58,7 +58,7 @@
                     </el-submenu>
                 </el-menu>
             </el-aside>
-            <el-main>
+            <el-main ref="main">
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -81,6 +81,10 @@
     created(){
     this.getGetCurrentLoginInformations();
     },
+      mounted(){
+        console.log(this.$refs.main)
+      },
+
     methods: {
       handleSelect(key, keyPath) { //选择顶部菜单，渲染二级菜单
        this.currentMenuData = this.menuData.filter(function(item){
